@@ -1,5 +1,5 @@
 # Version: Python 3.x
-# install additional module using command <i>pip install missing_module_name</i>
+# install additional module using command pip install missing_module_name
 import requests
 import json
 import string
