@@ -1,4 +1,4 @@
-# Version: Python 3.x
+# Version: Python 3.7.x
 # install additional module using command pip install missing_module_name
 import requests
 import json
