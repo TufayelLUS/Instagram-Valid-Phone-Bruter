@@ -5,7 +5,7 @@ import json
 import string
 import random
 import threading
-from queue import SimpleQueue
+from queue import Queue
 import socket
 
 threads_count = 40
@@ -77,7 +77,7 @@ class myThread(threading.Thread):
             self.queue.task_done()
 
 if __name__ == "__main__":
-    queue= SimpleQueue()
+    queue= Queue()
     threads = []
     for i in range(threads_count):
         worker = myThread(queue, i)
