@@ -17,15 +17,19 @@ class myThread(threading.Thread):
         self._args = args
         threading.Thread.__init__(self)
 
-    def rand_pass(self):
-        lettersAndDigits = string.ascii_letters + string.digits
-        return ''.join(random.choice(lettersAndDigits) for i in range(8))
-
     def is_insta_acc(self, cred):
+        s = requests.Session()
+        headers = {
+            "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36",
+            }
+        try:
+            lp = s.get('https://www.instagram.com/accounts/login/?',headers=headers)
+        except:
+            return False
+        token = s.cookies.get_dict().get('csrftoken')
         url = "https://www.instagram.com/accounts/login/ajax/"
         params = {
             "username": cred,
-            "password": self.rand_pass(),
             "enc_password": "",
             "queryParams": "{\"source\":\"auth_switcher\"}",
             "optIntoOneTap": "false"
@@ -36,21 +40,22 @@ class myThread(threading.Thread):
             "accept-language": "en-US,en;q=0.9,bn;q=0.8",
             "content-length": "126",
             "content-type": "application/x-www-form-urlencoded",
-            "cookie": "csrftoken=YG424J8dUtwG0wkhpFviRT7XJloAEB2g; mid=W5uoAwAEAAHQMrm9fx_BelLIVThw; mcd=3; rur=FRC",
+            #"cookie": "mid=W5uoAwAEAAHQMrm9fx_BelLIVThw; mcd=3; ig_did=91ADCB76-A660-4BE2-8696-EA6C2C514EBB; csrftoken=ZXzr82urYV1fCvFdLvp83ecFs2QvuWqV; rur=FTW",
             "dnt": "1",
             "origin": "https://www.instagram.com",
             "referer": "https://www.instagram.com/accounts/login/?source=auth_switcher",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36",
-            "x-csrftoken": "YG424J8dUtwG0wkhpFviRT7XJloAEB2g",
+            "x-csrftoken": token,
             "x-ig-app-id": "936619743392459",
             "x-ig-www-claim": "0",
-            "x-instagram-ajax": "d3ae0124792a-hot",
+            "x-instagram-ajax": "7ba5929a3456",
             "x-requested-with": "XMLHttpRequest"
             }
         try:
-            return requests.post(url, headers=headers, data=params).text
+            rr = s.post(url, headers=headers, data=params).text
+            return rr
         except:
             print("Site cannot be accessed! Increase timeout ...")
             return json.dumps({"user":"False"})
@@ -92,4 +97,3 @@ if __name__ == "__main__":
             queue.put(line)
         for item in threads:
             item.join()
-    
